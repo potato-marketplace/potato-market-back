@@ -1,10 +1,10 @@
 package com.mini.potatomarket.util.security;
 
+import com.mini.potatomarket.entity.User;
 import com.mini.potatomarket.entity.UserRoleEnum;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -20,13 +20,9 @@ public class UserDetailsImpl implements UserDetails {
         this.username = username;
     }
 
-    public User getUser() {
-        return user;
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole;
+        UserRoleEnum role = user.getRole();
         String authority = role.getAuthority();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
