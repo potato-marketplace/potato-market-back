@@ -14,6 +14,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private UserRoleEnum role;
 }
 
 // 테스트 코드입니다
