@@ -13,21 +13,21 @@ import java.util.Collection;
 @Getter
 public class UserDetailsImpl implements UserDetails {
     private final User user;
-    private final String username;
+    private final String loginId;
 
-    public UserDetailsImpl(User user, String username) {
+    public UserDetailsImpl(User user, String loginId) {
         this.user = user;
-        this.username = username;
+        this.loginId = loginId;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole();
-        String authority = role.getAuthority();
+//        UserRoleEnum role = user.getRole();
+//        String authority = role.getAuthority();
 
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
+//        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(simpleGrantedAuthority);
+//        authorities.add(simpleGrantedAuthority);
 
         return authorities;
     }

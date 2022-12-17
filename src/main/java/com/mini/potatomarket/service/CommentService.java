@@ -59,8 +59,6 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto updatecomment(Long id, CommentRequestDto requestDto, User user) {
-        // 유저 권한이 뭔지 확인 후 userRoleEnum에 저장
-        UserRoleEnum userRoleEnum = user.getRole();
         // 유저 객체 미리 생성
         Comment comment = null;
 
@@ -75,8 +73,6 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto deletecomment(Long id, User user) {
-        // 유저 권한이 확인 후 userRoleEnum 객체에 저장
-        UserRoleEnum userRoleEnum = user.getRole();
         // 유저 객체 미리 생성
         Comment comment = null;
 
