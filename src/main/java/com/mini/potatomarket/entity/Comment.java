@@ -49,7 +49,7 @@ public class Comment extends Timestamped{
     private List<Comment> children = new ArrayList<>();  // 대댓글 리스트
 
     @Column(nullable = false)
-    private Long depth;             // 대댓글 확인용
+    private int depth;             // 대댓글 확인용
 
 
     public Comment(CommentRequestDto requestDto, String nickname, Product product, User user){
@@ -57,7 +57,7 @@ public class Comment extends Timestamped{
         this.nickname      =   nickname;                       // 작성자 닉네임
         this.user          =   user;                           // User FK
         this.product       =   product;                        // Product FK
-        this.depth         =   0L;                             // 댓글 뎁스
+        this.depth         =   0;                             // 댓글 뎁스
     }
 
     // 댓글 내용 업데이트 메소드
@@ -66,7 +66,7 @@ public class Comment extends Timestamped{
     }
 
     // 댓글 뎁스를 설정하는 메소드
-    public void update_depth(Long num) {
+    public void update_depth(int num) {
         this.depth = num;
     }
 
