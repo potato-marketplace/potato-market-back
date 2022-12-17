@@ -61,8 +61,10 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto updatecomment(Long id, CommentRequestDto requestDto, User user) {
-        // 유저 객체 미리 생성
-        Comment comment = null;
+        // 유저 DB에서 검색한 ID값과 동일한 데이터 comment 객체에 저장
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new CustomException(COMMENT_NOT_FOUND)
+        );
 
         // comment 객체에서 가져온 ID값과 현재 유저의 아이디 값이 같으면 전달받은 데이터 업데이트
         if (comment.getUser().getId().equals(user.getId())) {
@@ -75,8 +77,10 @@ public class CommentService {
 
     @Transactional
     public CommentResponseDto deletecomment(Long id, User user) {
-        // 유저 객체 미리 생성
-        Comment comment = null;
+        // 유저 DB에서 검색한 ID값과 동일한 데이터 comment 객체에 저장
+        Comment comment = commentRepository.findById(id).orElseThrow(
+                () -> new CustomException(COMMENT_NOT_FOUND)
+        );
 
         // comment객체의 유저 ID값과 현재 접속한 유저의 ID값이 동일하면 DB에서 ID로 검색한 데이터 삭제
         if (comment.getUser().getId().equals(user.getId())) {
