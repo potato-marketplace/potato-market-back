@@ -42,7 +42,7 @@ public class WebSecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.httpBasic().disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/**").permitAll()
+                .antMatchers("/api/auth/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
