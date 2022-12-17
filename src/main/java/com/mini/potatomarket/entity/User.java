@@ -11,24 +11,33 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private String username;
+    private String loginId;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private UserRoleEnum role;
+    private String nickname;
 
-    public User(String username, String password, UserRoleEnum role) {
-        this.username = username;
+//    @Column(nullable = false)
+//    @Enumerated(value = EnumType.STRING)
+//    private UserRoleEnum role;
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    @Column
+//    private Product product;
+//
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    @Column
+//    private Comment comment;
+
+    public User(String loginId, String password, String nickname) {
+        this.loginId = loginId;
         this.password = password;
-        this.role = role;
+        this.nickname = nickname;
     }
 }
-
-// 테스트 코드입니다
