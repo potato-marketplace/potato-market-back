@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 
+import java.util.Optional;
+
 import static com.mini.potatomarket.util.error.ErrorCode.*;
 
 @Service
@@ -23,7 +25,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
 
     @Transactional
-    public CommentResponseDto createcomment(Long id, Long comment_id, CommentRequestDto requestDto, User user) {
+    public CommentResponseDto createcomment(Long id, Optional<Long> comment_id, CommentRequestDto requestDto, User user) {
         // 게시글 DB에서 입력받은 id값으로 일치하는 데이터 proudct 객체에 저장
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new CustomException(PRODUCT_NOT_FOUND)

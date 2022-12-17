@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+import java.util.OptionalLong;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/comment")
@@ -17,7 +20,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{id}/{comment_id}") // 뒤쪽 comment_id는 있어도 되고 없어도 됨
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long id, @PathVariable(required = false) Long comment_id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long id, @PathVariable(required = false) Optional<Long>comment_id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.ok(commentService.createcomment(id,comment_id, requestDto, userDetails.getUser()));
     }
 

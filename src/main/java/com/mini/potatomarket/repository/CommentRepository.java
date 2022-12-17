@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.OptionalLong;
 
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
@@ -15,4 +17,5 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     void deleteAllByProduct(Product product);
 
     Comment findByProductAndId(Product product, Long id);
+    Comment findByProductAndId(Product product, Optional<Long> id);
 }
