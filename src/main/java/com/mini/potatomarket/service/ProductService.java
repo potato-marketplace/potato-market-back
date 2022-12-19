@@ -1,6 +1,9 @@
 package com.mini.potatomarket.service;
 
+import com.mini.potatomarket.dto.CommentRequestDto;
+import com.mini.potatomarket.dto.CommentResponseDto;
 import com.mini.potatomarket.dto.ProductResponseDto;
+import com.mini.potatomarket.entity.Comment;
 import com.mini.potatomarket.entity.Product;
 import com.mini.potatomarket.entity.User;
 import com.mini.potatomarket.repository.ProductRepository;
@@ -17,14 +20,17 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+    List<CommentResponseDto> commentDtoList = new ArrayList<>();
+    List<CommentResponseDto> childCommentList = new ArrayList<>();
+
     //게시글 생성하기
     public ProductResponseDto addProduct(ProductResponseDto productResponseDto, User user){
         Product product = productRepository.save(new Product(productResponseDto,user));         // 저장소에 입력 받은 데이터 저장 // save()때문에 @Transactional 을 사용하지 않아도 됨
-        /*List<CommentDto> commentDtoList = new ArrayList<>();                            // 댓글을 dto로 감쌈
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();                            // 댓글을 dto로 감쌈
         for (Comment comment : product.getCommentList()) {
-            commentDtoList.add(new CommentDto(comment));
-        }*/
-        return new ProductResponseDto(product /*,commentDtoList*/);
+            commentResponseDtoList.add(new CommentResponseDto(comment));
+        }
+        return new ProductResponseDto(product ,commentResponseDtoList);
     }
     //전체 게시글 출력 ( 메인화면 )
     public List<ProductResponseDto> getProducts(){
@@ -32,11 +38,13 @@ public class ProductService {
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();                             // 리스트 값을 dto로 감쌈
 
         for(Product product: productList){
-            List<CommentResponseDto> commentDtoList = new ArrayList<>();
-            for(Comment commentParent : product.getParentList()){        // 부모
-                commentDtoList.add(new CommentRequestDto(comment));
-                for(Comment commentChild : product.getChildList()){      // 자식
+            for(Comment comment : product.getCommentList()){
+                if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
+                    for (Comment childComment : comment.getChildren()){                         //자식 댓글 리스트의 데이터를 childcomment에 저장
+                        commentDtoList.add(new CommentResponseDto(childComment));
+                    }
                 }
+                commentDtoList.add(new CommentResponseDto(comment));
             }
             ProductResponseDto productResponseDto = new ProductResponseDto(product,commentDtoList);
             productResponseDtoList.add(productResponseDto);
@@ -48,9 +56,17 @@ public class ProductService {
     public ProductResponseDto openMemo(Long id) {
 
         Product product = productRepository.findById(id).orElseThrow();
-        List<CommentResponseDto> commentDtoList = new ArrayList<>();
+
         for (Comment comment : product.getCommentList()) {
-            commentDtoList.add(new CommentRequestDto(comment));
+            if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
+                for (Comment childComment : comment.getChildren()){                         //자식 댓글 리스트의 데이터를 childComment에 저장
+                    if (id.equals(childComment.getProduct().getId())) {                     //childComment의 id와 받아온 id가 일치할 경우(선택 게시글 저장)
+                        childCommentList.add(new CommentResponseDto(childComment));
+                    }
+                    commentDtoList.add(new CommentResponseDto(comment));
+                }
+            }
+            commentDtoList.add(new CommentResponseDto(comment));
         }
         return new ProductResponseDto(product, commentDtoList);
     }
@@ -59,11 +75,11 @@ public class ProductService {
     //게시글 업데이트 ( 수정 페이지 )
     @Transactional
     public ProductResponseDto updateProduct(Long id, ProductResponseDto productResponseDto, User user){
-        Product product =productRepository.findByIdAndUserId(id,user.getUsername()).orElseThrow();
+        Product product =productRepository.findByIdAndUserId(id,user.getId()).orElseThrow();
 
         List<CommentResponseDto> commentDtoList = new ArrayList<>();
         for (Comment comment : product.getCommentList()) {
-            commentDtoList.add(new CommentRequestDto(comment));
+            commentDtoList.add(new CommentResponseDto(comment));
         }
 
         product.update(productResponseDto);
@@ -72,7 +88,7 @@ public class ProductService {
     //게시글 삭제 ( 수정 페이지 )
     @Transactional
     public void deleteProduct(Long id,User user){
-        Product product = productRepository.findByIdAndUserId(id,user.getUsername()).orElseThrow();
+        Product product = productRepository.findByIdAndUserId(id,user.getId()).orElseThrow();
         productRepository.delete(product);
     }
 

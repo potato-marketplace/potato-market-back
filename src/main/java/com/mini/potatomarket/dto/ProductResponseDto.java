@@ -17,7 +17,7 @@ public class ProductResponseDto {
     private Long price;
     private String nickname;
 
-    public ProductResponseDto(Product product, List<CommentDto> commentDtoList){
+    public ProductResponseDto(Product product, List<CommentResponseDto> commentResponseDtos){
         this.title =product.getTitle();
         this.content = product.getContent();
         this.price = product.getPrice();

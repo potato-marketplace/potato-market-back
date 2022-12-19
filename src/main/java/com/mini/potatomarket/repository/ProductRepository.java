@@ -11,7 +11,7 @@ public interface ProductRepository extends JpaRepository<Product ,Long> {
     List<Product> findAllByOrderByModifiedAtDesc();
 
 
-    Optional<Product> findByIdAndUserId(Long id, String username);
+    Optional<Product> findByIdAndUserId(Long id, Long userid);
 
     /*List<Product> findAllByCategory(String category);*/
 }
