@@ -5,7 +5,6 @@ import com.mini.potatomarket.dto.CommentResponseDto;
 import com.mini.potatomarket.entity.Comment;
 import com.mini.potatomarket.entity.Product;
 import com.mini.potatomarket.entity.User;
-import com.mini.potatomarket.entity.UserRoleEnum;
 import com.mini.potatomarket.repository.CommentRepository;
 import com.mini.potatomarket.repository.ProductRepository;
 import com.mini.potatomarket.repository.UserRepository;
