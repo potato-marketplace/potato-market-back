@@ -1,5 +1,6 @@
 package com.mini.potatomarket.entity;
 
+import com.mini.potatomarket.dto.ProductRequestDto;
 import com.mini.potatomarket.dto.ProductResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,17 +36,17 @@ public class Product extends Timestamped{
 
 
 
-    public Product(ProductResponseDto productResponseDto, User user){
+    public Product(ProductRequestDto productRequestDto, User user){
         this.user = user;
-        this.title = productResponseDto.getTitle();
-        this.price = productResponseDto.getPrice();
-        this.content = productResponseDto.getContent();
-        this.nickname = productResponseDto.getNickname();
+        this.title = productRequestDto.getTitle();
+        this.price = productRequestDto.getPrice();
+        this.content = productRequestDto.getContent();
+        this.nickname = user.getNickname();
     }
 
-    public void update(ProductResponseDto productResponseDto){
-        this.title= productResponseDto.getTitle();
-        this.price = productResponseDto.getPrice();
-        this.content = productResponseDto.getContent();
+    public void update(ProductRequestDto productRequestDto){
+        this.title= productRequestDto.getTitle();           //Request에서 title 받아오기
+        this.price = productRequestDto.getPrice();          //Request에서 price 받아오기
+        this.content = productRequestDto.getContent();      //Request에서 content 받아오기
     }
 }

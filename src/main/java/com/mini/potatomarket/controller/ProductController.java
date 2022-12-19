@@ -1,6 +1,7 @@
 package com.mini.potatomarket.controller;
 
 
+import com.mini.potatomarket.dto.ProductRequestDto;
 import com.mini.potatomarket.dto.ProductResponseDto;
 import com.mini.potatomarket.dto.ResponseMsgDto;
 import com.mini.potatomarket.service.ProductService;
@@ -16,11 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor        //생성자 주입
 @RequestMapping("/api")
 public class ProductController {
-    private static ProductService productService;
+    private final ProductService productService;
     //게시글 작성
     @PostMapping("/product")
-    public ProductResponseDto addProduct(@RequestBody ProductResponseDto productResponseDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return productService.addProduct(productResponseDto,userDetails.getUser());
+    public ProductResponseDto addProduct(@RequestBody ProductRequestDto productRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return productService.addProduct(productRequestDto,userDetails.getUser());
     }
     //게시글 리스트 출력
     @GetMapping("/products")
@@ -28,13 +29,13 @@ public class ProductController {
         return productService.getProducts();
     }
     @GetMapping("/product/{id}")
-    public ProductResponseDto openMemo(@PathVariable Long id){
-        return productService.openMemo(id);
+    public ProductResponseDto getProduct(@PathVariable Long id){
+        return productService.getProduct(id);
     }
     //게시글 업데이트
     @PutMapping("/product/{id}")
-    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody ProductResponseDto productResponseDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return productService.updateProduct(id, productResponseDto,userDetails.getUser());
+    public ProductResponseDto updateProduct(@PathVariable Long id, @RequestBody ProductRequestDto productRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return productService.updateProduct(id, productRequestDto,userDetails.getUser());
     }
     //게시글 삭제
     @DeleteMapping("/product/{id}")
