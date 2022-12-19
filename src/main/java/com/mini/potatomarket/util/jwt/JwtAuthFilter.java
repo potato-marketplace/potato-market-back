@@ -39,18 +39,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public void setAuthentication(String username) {
+    public void setAuthentication(String loginId) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication authentication = jwtUtil.createAuthentication(username);
+        Authentication authentication = jwtUtil.createAuthentication(loginId);
         context.setAuthentication(authentication);
         SecurityContextHolder.setContext(context);
     }
-
-    public void jwtExceptionHandler(HttpServletResponse response, String msg, int statusCode) {
+    public void jwtExceptionHandler(HttpServletResponse response, String message, int statusCode) {
         response.setStatus(statusCode);
         response.setContentType("application/json");
         try {
-            String json = new ObjectMapper().writeValueAsString(new SecurityExceptionDto(statusCode, msg));
+            String json = new ObjectMapper().writeValueAsString(new SecurityExceptionDto(statusCode, message));
             response.getWriter().write(json);
         } catch (Exception e) {
             log.error(e.getMessage());

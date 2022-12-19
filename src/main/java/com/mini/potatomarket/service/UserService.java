@@ -5,12 +5,13 @@ import com.mini.potatomarket.entity.User;
 import com.mini.potatomarket.repository.UserRepository;
 import com.mini.potatomarket.util.error.CustomException;
 import com.mini.potatomarket.util.jwt.JwtUtil;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+
+import static com.mini.potatomarket.util.error.ErrorCode.*;
 
 
 @Service
@@ -28,11 +29,11 @@ public class UserService {
         String nickname = dto.getNickname();
 
         if(userRepository.findByLoginId(loginId).isPresent()) {
-            throw new IllegalArgumentException("아이디 중복");
+            throw new CustomException(EXIST_USER);
         }
 
         if(userRepository.findByNickname(nickname).isPresent()) {
-            throw new IllegalArgumentException("닉네임 중복");
+            throw new CustomException(EXIST_NICK);
         }
 
         User user = new User(loginId, password, nickname);
@@ -42,11 +43,15 @@ public class UserService {
     // 로그인
     public void login(SignupRequestDto dto, HttpServletResponse response) {
         String loginId = dto.getLoginId();
-        String password = passwordEncoder.encode(dto.getPassword());
+        String password = dto.getPassword();
 
         User user = userRepository.findByLoginId(loginId).orElseThrow(
-                () -> new IllegalArgumentException("아이디 중복")
+                () -> new CustomException(USER_NOT_FOUND)
         );
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new CustomException(INVALID_PASSWORD);
+        }
 
         response.addHeader(JwtUtil.AUTHORIZATION_HEADER, jwtUtil.createToken(user.getLoginId()));
     }
@@ -56,7 +61,7 @@ public class UserService {
         String loginId = dto.getLoginId();
 
         if(userRepository.findByLoginId(loginId).isPresent()) {
-            throw new IllegalArgumentException("아이디 중복");
+            throw new CustomException(EXIST_USER);
         }
     }
 
@@ -65,7 +70,7 @@ public class UserService {
         String nickname = dto.getNickname();
 
         if(userRepository.findByNickname(nickname).isPresent()) {
-            throw new IllegalArgumentException("닉네임 중복");
+            throw new CustomException(EXIST_NICK);
         }
     }
 }

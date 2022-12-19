@@ -22,10 +22,6 @@ public class User {
 
     @Column(nullable = false)
     private String nickname;
-
-//    @Column(nullable = false)
-//    @Enumerated(value = EnumType.STRING)
-//    private UserRoleEnum role;
 //
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
 //    @Column
