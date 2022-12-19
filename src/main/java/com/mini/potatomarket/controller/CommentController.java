@@ -14,14 +14,14 @@ import java.util.OptionalLong;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/comment")
+@RequestMapping("/api/products")
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{id}/{comment_id}") // 뒤쪽 comment_id는 있어도 되고 없어도 됨
-    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long id, @PathVariable(required = false) Optional<Long>comment_id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.ok(commentService.createcomment(id,comment_id, requestDto, userDetails.getUser()));
+    @PostMapping("/{id}/{comment_id}") // 뒤쪽 comment_id는 부모 댓글일 경우 0으로 입력
+    public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long id, @PathVariable(required = false) Long comment_id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.ok(commentService.createcomment(id, comment_id, requestDto, userDetails.getUser()));
     }
 
     // DB update (Comment)

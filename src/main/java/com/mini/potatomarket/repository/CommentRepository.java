@@ -17,5 +17,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     void deleteAllByProduct(Product product);
 
     Comment findByProductAndId(Product product, Long id);
-    Comment findByProductAndId(Product product, Optional<Long> id);
 }
