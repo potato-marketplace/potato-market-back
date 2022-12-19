@@ -11,5 +11,6 @@ public class ProductRequestDto {
 
     private String content;
     private String title;
+    private String nickname;
     private Long price;
 }
