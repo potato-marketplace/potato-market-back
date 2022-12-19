@@ -4,7 +4,6 @@ import com.mini.potatomarket.dto.CommentRequestDto;
 import com.mini.potatomarket.dto.CommentResponseDto;
 import com.mini.potatomarket.entity.Comment;
 import com.mini.potatomarket.entity.User;
-import com.mini.potatomarket.entity.UserRoleEnum;
 import com.mini.potatomarket.repository.CommentRepository;
 import com.mini.potatomarket.repository.UserRepository;
 import com.mini.potatomarket.util.error.CustomException;
