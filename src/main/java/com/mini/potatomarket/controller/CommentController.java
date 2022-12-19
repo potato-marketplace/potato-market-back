@@ -19,19 +19,19 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{id}/{comment_id}") // 뒤쪽 comment_id는 부모 댓글일 경우 0으로 입력
+    @PostMapping("/{id}/comments/{comment_id}") // 뒤쪽 comment_id는 부모 댓글일 경우 0으로 입력
     public ResponseEntity<CommentResponseDto> createComment(@PathVariable Long id, @PathVariable(required = false) Long comment_id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.ok(commentService.createcomment(id, comment_id, requestDto, userDetails.getUser()));
     }
 
     // DB update (Comment)
-    @PutMapping("/{id}")
+    @PutMapping("comments/{id}")
     public ResponseEntity<CommentResponseDto> updateComment(@PathVariable Long id, @RequestBody CommentRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return ResponseEntity.ok(commentService.updatecomment(id, requestDto, userDetails.getUser()));
     }
 
     // DB delete (Comment)
-    @DeleteMapping("/{id}")
+    @DeleteMapping("comments/{id}")
     public ResponseEntity<CommentResponseDto> deleteComment(@PathVariable  Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(commentService.deletecomment(id, userDetails.getUser()));
     }
