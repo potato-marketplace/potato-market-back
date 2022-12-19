@@ -54,7 +54,7 @@ public class ProductService {
     }
     //게시글 선택 출력( 상세 페이지 )
     @Transactional
-    public ProductResponseDto openMemo(Long id) {
+    public ProductResponseDto getProduct(Long id) {
 
         Product product = productRepository.findById(id).orElseThrow();
 

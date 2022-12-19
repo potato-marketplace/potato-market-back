@@ -29,8 +29,8 @@ public class ProductController {
         return productService.getProducts();
     }
     @GetMapping("/product/{id}")
-    public ProductResponseDto openMemo(@PathVariable Long id){
-        return productService.openMemo(id);
+    public ProductResponseDto getProduct(@PathVariable Long id){
+        return productService.getProduct(id);
     }
     //게시글 업데이트
     @PutMapping("/product/{id}")
