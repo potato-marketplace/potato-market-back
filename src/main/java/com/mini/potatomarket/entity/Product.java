@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -29,8 +30,8 @@ public class Product extends Timestamped{
     @Column
     private String nickname;
 
-    @OneToMany(mappedBy = "PRODUCT")
-    private List<Comment>commentList = new ArrayList;
+    @OneToMany(mappedBy = "product")
+    private List<Comment> commentList = new ArrayList<>();
 
 
 

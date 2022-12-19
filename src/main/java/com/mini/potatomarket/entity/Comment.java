@@ -57,7 +57,7 @@ public class Comment extends Timestamped{
         this.nickname      =   nickname;                       // 작성자 닉네임
         this.user          =   user;                           // User FK
         this.product       =   product;                        // Product FK
-        this.depth         =   0;                             // 댓글 뎁스
+        this.depth         =   0;                              // 댓글 뎁스
     }
 
     // 댓글 내용 업데이트 메소드
