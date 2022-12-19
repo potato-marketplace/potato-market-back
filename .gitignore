@@ -5,6 +5,13 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### application ###
+application-aws.yml
+application-credentials.yml
+application-jwt.yml
+application-dev.yml
+application-rds.yml
+
 ### STS ###
 .apt_generated
 .classpath

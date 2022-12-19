@@ -21,17 +21,19 @@ public class ProductResponseDto {
     private String nickname;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
-    private List<CommentResponseDto> commentDtoList = new ArrayList<>();        //댓글 리스트
+    private List<CommentResponseDto> commentDtoList = new ArrayList<>();               //댓글 리스트
+    private List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();   //이미지 파일 리스트
 
-    public ProductResponseDto(Product product, List<CommentResponseDto> commentResponseDtos){
+    public ProductResponseDto(Product product, List<CommentResponseDto> commentResponseDtos, List<ImageFileResponseDto> imageFileResponseDtoList){
         this.id = product.getId();
         this.title =product.getTitle();
         this.content = product.getContent();
         this.price = product.getPrice();
-        this.nickname = product.getUser().getNickname();        //nickname 유저에서 받아오기
+        this.nickname = product.getUser().getNickname();          //nickname 유저에서 받아오기
         this.createdAt = product.getCreatedAt();
         this.modifiedAt = product.getModifiedAt();
-        this.commentDtoList = commentResponseDtos;              //댓글 리스트 받아오기
+        this.commentDtoList = commentResponseDtos;                //댓글 리스트 받아오기
+        this.imageFileResponseDtoList = imageFileResponseDtoList; //이미지 리스트 받아오기
     }
     public ProductResponseDto(Product product){
         this.id = product.getId();

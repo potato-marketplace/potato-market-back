@@ -34,6 +34,9 @@ public class Product extends Timestamped{
     @OneToMany(mappedBy = "product")
     private List<Comment> commentList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private List<ImageFile> imageFileList = new ArrayList<>();
+
 
 
     public Product(ProductRequestDto productRequestDto, User user){
