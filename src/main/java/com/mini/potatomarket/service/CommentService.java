@@ -34,17 +34,16 @@ public class CommentService {
         Comment comment;
         if (comment_id == 0) {
             comment = commentRepository.save(new Comment(requestDto, user.getNickname(), product, user));
-            return new CommentResponseDto(comment, comment_id);
         } else {
             Comment childComment = commentRepository.findById(comment_id).orElseThrow(
                     () -> new CustomException(COMMENT_NOT_FOUND)
             );
-            if (commentRepository.findByProductAndId(product, comment_id).equals(null)){
+            if (commentRepository.findByProductAndId(product, comment_id).isEmpty()){
                 throw new CustomException(COMMENT_NOT_FOUND);
             }
             comment = commentRepository.save(new Comment(requestDto, user.getNickname(), product, user, childComment));
-            return new CommentResponseDto(comment, comment_id);
         }
+        return new CommentResponseDto(comment, comment_id);
     }
 
     @Transactional
