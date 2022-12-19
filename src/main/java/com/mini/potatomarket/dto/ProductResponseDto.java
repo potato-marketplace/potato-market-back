@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductResponseDto {
+public class    ProductResponseDto {
 
     private Long id;
     private String title;
@@ -20,6 +20,7 @@ public class ProductResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
     private List<CommentResponseDto> commentList = new ArrayList<>();        //댓글 리스트
+
 
     public ProductResponseDto(Product product, List<CommentResponseDto> commentResponseDtos){
         this.id = product.getId();

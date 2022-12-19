@@ -6,6 +6,7 @@ import com.mini.potatomarket.dto.ProductResponseDto;
 import com.mini.potatomarket.entity.Comment;
 import com.mini.potatomarket.entity.Product;
 import com.mini.potatomarket.entity.User;
+import com.mini.potatomarket.repository.CommentRepository;
 import com.mini.potatomarket.repository.ProductRepository;
 import com.mini.potatomarket.util.error.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ import static com.mini.potatomarket.util.error.ErrorCode.*;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final CommentRepository commentRepository;
 
-    private final List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-    List<CommentResponseDto> childCommentList = new ArrayList<>();
+
 
     //게시글 생성하기
     public ProductResponseDto addProduct(ProductRequestDto productRequestDto, User user){
@@ -36,21 +37,23 @@ public class ProductService {
         return new ProductResponseDto(product ,commentResponseDtoList);
     }
     //전체 게시글 출력 ( 메인화면 )
+    @Transactional
     public List<ProductResponseDto> getProducts(){
         List<Product> productList =productRepository.findAllByOrderByModifiedAtDesc();  // 저장소에 모든 데이터를 불러와 리스트에 저장
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();                             // 리스트 값을 dto로 감쌈
 
         for(Product product: productList){
+            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
             for(Comment comment : product.getCommentList()){
                 if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
+                    List<CommentResponseDto> childCommentList = new ArrayList<>();
                     for (Comment childComment : comment.getChildren()){                         //자식 댓글 리스트의 데이터를 childcomment에 저장
                         childCommentList.add(new CommentResponseDto(childComment));
                     }
+                    commentResponseDtoList.add(new CommentResponseDto(comment,childCommentList));
                 }
-                commentResponseDtoList.add(new CommentResponseDto(comment));
             }
-            ProductResponseDto productResponseDto = new ProductResponseDto(product,commentResponseDtoList);
-            productResponseDtoList.add(productResponseDto);
+            productResponseDtoList.add(new ProductResponseDto(product,commentResponseDtoList));
         }
         return productResponseDtoList;
     }
@@ -60,17 +63,17 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new CustomException(PRODUCT_NOT_FOUND)
         );
-
+        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : product.getCommentList()) {
+            List<CommentResponseDto> childCommentList = new ArrayList<>();
             if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
                 for (Comment childComment : comment.getChildren()){                         //자식 댓글 리스트의 데이터를 childComment에 저장
                     if (id.equals(childComment.getProduct().getId())) {                     //childComment의 id와 받아온 id가 일치할 경우(선택 게시글 저장)
                         childCommentList.add(new CommentResponseDto(childComment));
                     }
-                    commentResponseDtoList.add(new CommentResponseDto(comment));
                 }
+                commentResponseDtoList.add(new CommentResponseDto(comment,childCommentList));
             }
-            commentResponseDtoList.add(new CommentResponseDto(comment));
         }
         return new ProductResponseDto(product, commentResponseDtoList);
     }
@@ -82,10 +85,8 @@ public class ProductService {
         Product product = productRepository.findById(id).orElseThrow(
                 () -> new CustomException(PRODUCT_NOT_FOUND)
         );
+
         if(user.getId().equals(product.getUser().getId())) {           // 작성자 아이디가 현재 로그인한 아이디와 같은지 확인
-            for (Comment comment : product.getCommentList()) {
-                commentResponseDtoList.add(new CommentResponseDto(comment));
-            }
             product.update(productRequestDto);
             return new ProductResponseDto(product);
         } else {

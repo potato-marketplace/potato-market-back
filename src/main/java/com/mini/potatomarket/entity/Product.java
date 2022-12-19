@@ -30,6 +30,7 @@ public class Product extends Timestamped{
     @Column
     private String nickname;
 
+
     @OneToMany(mappedBy = "product")
     private List<Comment> commentList = new ArrayList<>();
 
