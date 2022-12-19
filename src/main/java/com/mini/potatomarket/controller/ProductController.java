@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor        //생성자 주입
 @RequestMapping("/api")
 public class ProductController {
-    private static ProductService productService;
+    private final ProductService productService;
     //게시글 작성
     @PostMapping("/product")
     public ProductResponseDto addProduct(@RequestBody ProductRequestDto productRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
