@@ -1,6 +1,5 @@
 package com.mini.potatomarket.service;
 
-import com.mini.potatomarket.dto.CommentRequestDto;
 import com.mini.potatomarket.dto.CommentResponseDto;
 import com.mini.potatomarket.dto.ProductRequestDto;
 import com.mini.potatomarket.dto.ProductResponseDto;
@@ -8,6 +7,7 @@ import com.mini.potatomarket.entity.Comment;
 import com.mini.potatomarket.entity.Product;
 import com.mini.potatomarket.entity.User;
 import com.mini.potatomarket.repository.ProductRepository;
+import com.mini.potatomarket.util.error.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,13 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mini.potatomarket.util.error.ErrorCode.*;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
 
-    List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
+    private final List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
     List<CommentResponseDto> childCommentList = new ArrayList<>();
 
     //게시글 생성하기
@@ -42,7 +44,7 @@ public class ProductService {
             for(Comment comment : product.getCommentList()){
                 if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
                     for (Comment childComment : comment.getChildren()){                         //자식 댓글 리스트의 데이터를 childcomment에 저장
-                        commentResponseDtoList.add(new CommentResponseDto(childComment));
+                        childCommentList.add(new CommentResponseDto(childComment));
                     }
                 }
                 commentResponseDtoList.add(new CommentResponseDto(comment));
@@ -53,10 +55,11 @@ public class ProductService {
         return productResponseDtoList;
     }
     //게시글 선택 출력( 상세 페이지 )
-    @Transactional
     public ProductResponseDto getProduct(Long id) {
 
-        Product product = productRepository.findById(id).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new CustomException(PRODUCT_NOT_FOUND)
+        );
 
         for (Comment comment : product.getCommentList()) {
             if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
@@ -75,21 +78,32 @@ public class ProductService {
 
     //게시글 업데이트 ( 수정 페이지 )
     @Transactional
-    public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto, User user){
-        Product product =productRepository.findByIdAndUserId(id,user.getId()).orElseThrow();
-
-        for (Comment comment : product.getCommentList()) {
-            commentResponseDtoList.add(new CommentResponseDto(comment));
+    public ProductResponseDto updateProduct(Long id, ProductRequestDto productRequestDto, User user) {
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new CustomException(PRODUCT_NOT_FOUND)
+        );
+        if(user.getId().equals(product.getUser().getId())) {           // 작성자 아이디가 현재 로그인한 아이디와 같은지 확인
+            for (Comment comment : product.getCommentList()) {
+                commentResponseDtoList.add(new CommentResponseDto(comment));
+            }
+            product.update(productRequestDto);
+            return new ProductResponseDto(product);
+        } else {
+            throw new CustomException(INVALID_USER);
         }
-
-        product.update(productRequestDto);
-        return new ProductResponseDto(product);
     }
     //게시글 삭제 ( 수정 페이지 )
-    @Transactional
-    public void deleteProduct(Long id,User user){
-        Product product = productRepository.findByIdAndUserId(id,user.getId()).orElseThrow();
-        productRepository.delete(product);
+    public void deleteProduct(Long id, User user) {
+
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new CustomException(PRODUCT_NOT_FOUND)
+        );
+        if(user.getId().equals(product.getUser().getId())) {           // 작성자 아이디가 현재 로그인한 아이디와 같은지 확인
+            productRepository.delete(product);
+        }else {
+            throw new CustomException(INVALID_USER);
+        }
+
     }
 
 
