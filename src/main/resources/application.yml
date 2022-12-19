@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: rds
+    include:
+      - aws
+      - credentials
+      - jwt
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
