@@ -48,6 +48,5 @@ public class Product extends Timestamped{
         this.title= productRequestDto.getTitle();           //Request에서 title 받아오기
         this.price = productRequestDto.getPrice();          //Request에서 price 받아오기
         this.content = productRequestDto.getContent();      //Request에서 content 받아오기
-        this.nickname = user.getNickname();                 //user에서 nickname 받아오기
     }
 }
