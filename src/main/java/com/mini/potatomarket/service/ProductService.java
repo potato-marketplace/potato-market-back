@@ -1,15 +1,17 @@
 package com.mini.potatomarket.service;
 
-import com.mini.potatomarket.dto.CommentResponseDto;
-import com.mini.potatomarket.dto.ProductRequestDto;
-import com.mini.potatomarket.dto.ProductResponseDto;
+
+import com.mini.potatomarket.dto.*;
 import com.mini.potatomarket.entity.Comment;
+import com.mini.potatomarket.entity.ImageFile;
 import com.mini.potatomarket.entity.Product;
 import com.mini.potatomarket.entity.User;
+import com.mini.potatomarket.repository.ImageFileRepository;
 import com.mini.potatomarket.repository.CommentRepository;
 import com.mini.potatomarket.repository.ProductRepository;
 import com.mini.potatomarket.util.error.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +25,17 @@ import static com.mini.potatomarket.util.error.ErrorCode.*;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ImageFileRepository imageFileRepository;
     private final CommentRepository commentRepository;
 
 
-
     //게시글 생성하기
-    public ProductResponseDto addProduct(ProductRequestDto productRequestDto, User user){
+    public ResponseDto addProduct(ProductRequestDto productRequestDto, User user, List<ImageFileRequestDto> imageRequestDtoList){
         Product product = productRepository.save(new Product(productRequestDto,user));         // 저장소에 입력 받은 데이터 저장 // save()때문에 @Transactional 을 사용하지 않아도 됨
-        List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();                            // 댓글을 dto로 감쌈
-        for (Comment comment : product.getCommentList()) {
-            commentResponseDtoList.add(new CommentResponseDto(comment));
+        for (ImageFileRequestDto imageFileRequestDto : imageRequestDtoList) {
+            ImageFile imageFile = imageFileRepository.save(new ImageFile(imageFileRequestDto, product));
         }
-        return new ProductResponseDto(product ,commentResponseDtoList);
+        return new ResponseDto(HttpStatus.OK.value(), "이미지 업로드 성공");
     }
     //전체 게시글 출력 ( 메인화면 )
     @Transactional
@@ -53,7 +54,13 @@ public class ProductService {
                     commentResponseDtoList.add(new CommentResponseDto(comment,childCommentList));
                 }
             }
-            productResponseDtoList.add(new ProductResponseDto(product,commentResponseDtoList));
+
+            List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();            //이미지 파일 리스트 출력을 위해 ArrayList 생성
+            for (ImageFile imageFile : product.getImageFileList()) {
+                imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));              //반복문을 돌면서 entity를 dto로 변환
+            }
+
+            productResponseDtoList.add(new ProductResponseDto(product,commentResponseDtoList, imageFileResponseDtoList));
         }
         return productResponseDtoList;
     }
@@ -75,7 +82,12 @@ public class ProductService {
                 commentResponseDtoList.add(new CommentResponseDto(comment,childCommentList));
             }
         }
-        return new ProductResponseDto(product, commentResponseDtoList);
+
+        List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();
+        for (ImageFile imageFile : product.getImageFileList()) {
+            imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));
+        }
+        return new ProductResponseDto(product, commentResponseDtoList, imageFileResponseDtoList);
     }
 
 

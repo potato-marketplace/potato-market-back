@@ -4,25 +4,34 @@ package com.mini.potatomarket.controller;
 import com.mini.potatomarket.dto.ProductRequestDto;
 import com.mini.potatomarket.dto.ProductResponseDto;
 import com.mini.potatomarket.dto.ResponseDto;
+import com.mini.potatomarket.service.AwsS3Service;
 import com.mini.potatomarket.service.ProductService;
 import com.mini.potatomarket.util.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@RestController                 //controller + ResponseBody
+@Controller                 //controller + ResponseBody
 @RequiredArgsConstructor        //생성자 주입
 @RequestMapping("/api/products")
 public class ProductController {
     private final ProductService productService;
-    //게시글 작성
+    private final AwsS3Service awsS3Service;
+    private static String dirName = "product-img";
+
+    //게시글 작성 + S3 이미지 업로드(+ DB저장)
     @PostMapping
-    public ResponseEntity<ProductResponseDto> addProduct(@RequestBody ProductRequestDto productRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return ResponseEntity.ok(productService.addProduct(productRequestDto,userDetails.getUser()));
+    public ResponseEntity<ResponseDto> addProduct(
+            @RequestPart(value = "key") ProductRequestDto productRequestDto,
+            @RequestPart(value = "multipartFile") List<MultipartFile> multipartFile,
+            @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return ResponseEntity.ok(productService.addProduct(productRequestDto,userDetails.getUser(), awsS3Service.uploadFile(multipartFile, dirName)));
     }
     //게시글 리스트 출력
     @GetMapping
