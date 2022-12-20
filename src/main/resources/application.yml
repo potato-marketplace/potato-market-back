@@ -1,16 +1,13 @@
 spring:
   profiles:
+    active: rds
     include:
       - aws
       - credentials
       - jwt
-    active: dev
 
   servlet:
     multipart:
       enabled: true
       max-file-size: 20MB
       max-request-size: 20MB
-
-  main:
-    allow-circular-references: true

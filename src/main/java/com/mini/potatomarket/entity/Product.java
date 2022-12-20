@@ -1,7 +1,6 @@
 package com.mini.potatomarket.entity;
 
 import com.mini.potatomarket.dto.ProductRequestDto;
-import com.mini.potatomarket.dto.ProductResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +29,7 @@ public class Product extends Timestamped{
     private String content;
     @Column
     private String nickname;
+
 
     @OneToMany(mappedBy = "product")
     private List<Comment> commentList = new ArrayList<>();

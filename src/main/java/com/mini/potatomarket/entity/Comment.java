@@ -39,6 +39,9 @@ public class Comment extends Timestamped{
     @JsonIgnore
     private Product product;        // 게시판 id
 
+    @Column(nullable = false)
+    private int depth;             // 대댓글 확인용
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinColumn(name = "parentid")
@@ -48,8 +51,6 @@ public class Comment extends Timestamped{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "parent", orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();  // 대댓글 리스트
 
-    @Column(nullable = false)
-    private int depth;             // 대댓글 확인용
 
 
     public Comment(CommentRequestDto requestDto, String nickname, Product product, User user){
@@ -60,18 +61,17 @@ public class Comment extends Timestamped{
         this.depth         =   0;                              // 댓글 뎁스
     }
 
+    public Comment(CommentRequestDto requestDto, String nickname, Product product, User user, Comment comment){
+        this.contents      =   requestDto.getContent();        // 댓글 내용
+        this.nickname      =   nickname;                       // 작성자 닉네임
+        this.user          =   user;                           // User FK
+        this.product       =   product;                        // Product FK
+        this.depth         =   1;                              // 댓글 뎁스
+        this.parent        =   comment;
+    }
+
     // 댓글 내용 업데이트 메소드
     public void update(CommentRequestDto requestDto){
         this.contents = requestDto.getContent();
-    }
-
-    // 댓글 뎁스를 설정하는 메소드
-    public void update_depth(int num) {
-        this.depth = num;
-    }
-
-    // children 댓글 리스트에 comment 객체 추가 메소드
-    public void update_children(Comment comment) {
-        this.children.add(comment);
     }
 }
