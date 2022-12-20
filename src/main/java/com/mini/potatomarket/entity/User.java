@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,14 +24,12 @@ public class User {
 
     @Column(nullable = false)
     private String nickname;
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-//    @Column
-//    private Product product;
-//
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-//    @Column
-//    private Comment comment;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Product> productList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList = new ArrayList<>();
 
     public User(String loginId, String password, String nickname) {
         this.loginId = loginId;
