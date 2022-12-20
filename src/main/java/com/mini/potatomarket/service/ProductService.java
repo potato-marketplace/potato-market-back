@@ -8,6 +8,7 @@ import com.mini.potatomarket.entity.User;
 import com.mini.potatomarket.repository.ImageFileRepository;
 import com.mini.potatomarket.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +26,12 @@ public class ProductService {
     List<CommentResponseDto> childCommentList = new ArrayList<>();
 
     //게시글 생성하기
-    public ProductResponseDto addProduct(ProductRequestDto productRequestDto, User user, List<ImageFileRequestDto> imageRequestDtoList){
+    public ResponseDto addProduct(ProductRequestDto productRequestDto, User user, List<ImageFileRequestDto> imageRequestDtoList){
         Product product = productRepository.save(new Product(productRequestDto,user));         // 저장소에 입력 받은 데이터 저장 // save()때문에 @Transactional 을 사용하지 않아도 됨
         for (ImageFileRequestDto imageFileRequestDto : imageRequestDtoList) {
             ImageFile imageFile = imageFileRepository.save(new ImageFile(imageFileRequestDto, product));
         }
-        return new ProductResponseDto(product);
+        return new ResponseDto(HttpStatus.OK.value(), "이미지 업로드 성공");
     }
     //전체 게시글 출력 ( 메인화면 )
     public List<ProductResponseDto> getProducts(){
