@@ -38,15 +38,13 @@ public class UserController {
     // 아이디 중복 확인
     @PostMapping("/idDupleCheck")
     public ResponseEntity<ResponseDto> idCheck(@RequestBody @Valid SignupRequestDto dto) {
-        userService.idCheck(dto);
-        return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), "아이디 사용 가능"));
+        return ResponseEntity.ok(userService.idCheck(dto));
     }
 
     // 닉네임 중복 확인
     @PostMapping("/nickDupleCheck")
     public ResponseEntity<ResponseDto> nickCheck(@RequestBody SignupRequestDto dto) {
-        userService.nickCheck(dto);
-        return ResponseEntity.ok(new ResponseDto(HttpStatus.OK.value(), "닉네임 사용 가능"));
+        return ResponseEntity.ok(userService.nickCheck(dto));
     }
 
 }

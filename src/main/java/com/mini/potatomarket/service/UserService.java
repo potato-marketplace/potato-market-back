@@ -1,5 +1,6 @@
 package com.mini.potatomarket.service;
 
+import com.mini.potatomarket.dto.ResponseDto;
 import com.mini.potatomarket.dto.SignupRequestDto;
 import com.mini.potatomarket.entity.User;
 import com.mini.potatomarket.repository.UserRepository;
@@ -57,20 +58,24 @@ public class UserService {
     }
 
     // 아이디 중복 확인
-    public void idCheck(SignupRequestDto dto) {
+    public ResponseDto idCheck(SignupRequestDto dto) {
         String loginId = dto.getLoginId();
 
-        if(userRepository.findByLoginId(loginId).isPresent()) {
-            throw new CustomException(EXIST_USER);
+        if(userRepository.existsByLoginId(loginId)) {
+            return new ResponseDto(409, "아이디 중복");
+        } else {
+            return new ResponseDto(200, "아이디 사용 가능");
         }
     }
 
     // 닉네임 중복 확인
-    public void nickCheck(SignupRequestDto dto) {
+    public ResponseDto nickCheck(SignupRequestDto dto) {
         String nickname = dto.getNickname();
 
-        if(userRepository.findByNickname(nickname).isPresent()) {
-            throw new CustomException(EXIST_NICK);
+        if(userRepository.existsByNickname(nickname)) {
+            return new ResponseDto(409, "닉네임 중복");
+        } else {
+            return new ResponseDto(200, "닉네임 사용 가능");
         }
     }
 }
