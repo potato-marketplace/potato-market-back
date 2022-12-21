@@ -40,7 +40,7 @@ public class ProductService {
     //전체 게시글 출력 ( 메인화면 )
     @Transactional
     public List<ProductResponseDto> getProducts(){
-        List<Product> productList =productRepository.findAllByOrderByModifiedAtDesc();  // 저장소에 모든 데이터를 불러와 리스트에 저장
+        List<Product> productList =productRepository.findAllByOrderByCreatedAtDesc();  // 저장소에 모든 데이터를 불러와 리스트에 저장
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();                             // 리스트 값을 dto로 감쌈
 
         for(Product product: productList){

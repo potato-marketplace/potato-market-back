@@ -21,13 +21,13 @@ public class Product extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    @Column
+    @Column(nullable = false)
     private String title;
-    @Column
+    @Column(nullable = false)
     private Long price;
-    @Column
+    @Column(nullable = false)
     private String content;
-    @Column
+    @Column(nullable = false)
     private String nickname;
 
 
