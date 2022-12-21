@@ -42,4 +42,14 @@ public class    ProductResponseDto {
         this.createdAt = product.getCreatedAt();
         this.modifiedAt = product.getModifiedAt();              //댓글 리스트 받아오기
     }
+    public ProductResponseDto(Product product, List<ImageFileResponseDto> imageFileResponseDtoList) {
+        this.id = product.getId();
+        this.title = product.getTitle();
+        this.content = product.getContent();
+        this.price = product.getPrice();
+        this.nickname = product.getUser().getNickname();          //nickname 유저에서 받아오기
+        this.createdAt = product.getCreatedAt();
+        this.modifiedAt = product.getModifiedAt();
+        this.imageFileResponseDtoList = imageFileResponseDtoList; //이미지 리스트 받아오기
+    }
 }

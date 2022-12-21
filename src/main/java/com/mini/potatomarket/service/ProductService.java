@@ -44,23 +44,11 @@ public class ProductService {
         List<ProductResponseDto> productResponseDtoList = new ArrayList<>();                             // 리스트 값을 dto로 감쌈
 
         for(Product product: productList){
-            List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
-            for(Comment comment : product.getCommentList()){
-                if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
-                    List<CommentResponseDto> childCommentList = new ArrayList<>();
-                    for (Comment childComment : comment.getChildren()){                         //자식 댓글 리스트의 데이터를 childcomment에 저장
-                        childCommentList.add(new CommentResponseDto(childComment));
-                    }
-                    commentResponseDtoList.add(new CommentResponseDto(comment,childCommentList));
-                }
-            }
-
             List<ImageFileResponseDto> imageFileResponseDtoList = new ArrayList<>();            //이미지 파일 리스트 출력을 위해 ArrayList 생성
             for (ImageFile imageFile : product.getImageFileList()) {
                 imageFileResponseDtoList.add(new ImageFileResponseDto(imageFile));              //반복문을 돌면서 entity를 dto로 변환
             }
-
-            productResponseDtoList.add(new ProductResponseDto(product,commentResponseDtoList, imageFileResponseDtoList));
+            productResponseDtoList.add(new ProductResponseDto(product, imageFileResponseDtoList));
         }
         return productResponseDtoList;
     }
@@ -73,13 +61,13 @@ public class ProductService {
         List<CommentResponseDto> commentResponseDtoList = new ArrayList<>();
         for (Comment comment : product.getCommentList()) {
             List<CommentResponseDto> childCommentList = new ArrayList<>();
-            if(comment.getParent()==null){                                                  //부모 댓글이 없을 경우
-                for (Comment childComment : comment.getChildren()){                         //자식 댓글 리스트의 데이터를 childComment에 저장
-                    if (id.equals(childComment.getProduct().getId())) {                     //childComment의 id와 받아온 id가 일치할 경우(선택 게시글 저장)
-                        childCommentList.add(new CommentResponseDto(childComment));
+            if(comment.getParent()==null){                                                      //부모 댓글이 없을 경우
+                for (Comment childComment : comment.getChildren()){                              //자식 댓글 리스트의 데이터를 childComment에 저장
+                    if (id.equals(childComment.getProduct().getId())) {                         //childComment의 id와 받아온 id가 일치할 경우(선택 게시글 저장)
+                        childCommentList.add(new CommentResponseDto(childComment));             //저장된 자식댓글을 리스트에 저장
                     }
                 }
-                commentResponseDtoList.add(new CommentResponseDto(comment,childCommentList));
+                commentResponseDtoList.add(new CommentResponseDto(comment,childCommentList));   //저장된 데이터를 리스트에
             }
         }
 
