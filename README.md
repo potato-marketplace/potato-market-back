@@ -56,7 +56,7 @@
 - Frontend : React, Redux, Redux Toolkit, Axios
 - Backend  : Springboot, Spring Security, JWT, AWS S3, RDS
 
-## 5.트러블 슈팅
+## 5. 트러블 슈팅
 
 💪 어려웠지만, 극복 해냄!
 
